@@ -25,6 +25,45 @@ More info coming soon.
 
 At this stage the project will have a very flat structure. As the new components and features get added this structure will get more detailed/nested.
 
+## Technical
+
+
+### Contract Variables
+
+- Status
+- revealed
+- wlPrice;
+- salePrice
+- whitelistMintLimit
+- maxMintLimit
+- maxTokens
+- baseUri
+- notRevealedUri
+- whitelist;
+- addressMintedCount;
+- tokenIdCounter
+
+### Contract Functions
+
+The smart contract functions.
+
+- constructor
+- setState
+- setBaseUri
+- setNotRevealedUri
+- reveal
+- tokenURI
+- setWLPrice
+- setSalePrice
+- setWhiteListMintLimit
+- addToWhitelist: Adding wallet to whitelist
+- removeFromWhitelist: To ensure bad actors are removed.
+- whiteListMint
+- saleMint
+- mint
+- withdraw
+
+
 ## Tools
 
 Tools used in the world of NFTs. This list includes tools used for development and testing, along with general tools needed to own, or interact with NFTs and the communities.

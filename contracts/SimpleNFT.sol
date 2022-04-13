@@ -20,6 +20,10 @@ contract SimpleNFT {
   // Variables
 
   // Contract initiation - constructor
+  constructor() {
+    //Initiate the smart contract
+
+  }
 
   // Contract Functions - Contract functionality
 
