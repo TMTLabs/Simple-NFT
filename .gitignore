@@ -10,6 +10,10 @@ typechain
 cache
 artifacts
 
+#Temp files
+temp.txt
+notes.txt
+
 # System Files
 # OSX
 .DS_Store
