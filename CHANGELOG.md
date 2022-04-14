@@ -10,7 +10,6 @@ All notable changes to the project is documented here.
 ### Major Features
 
 - Develop Smart Contract
-- 
 
 
 ### Major Changes
@@ -23,4 +22,4 @@ All notable changes to the project is documented here.
 
 ### Known Bugs
 
-- (0.0.1) 
+- (0.0.1)

@@ -15,11 +15,15 @@ The [ChangeLog](CHANGELOG.md) will track all the updates and major changed made 
 
 # Functionality
 
-More info coming soon.
+> More info coming soon...
 
 ## How to use
 
-More info coming soon.
+For now the easiest way to use this smart contract is to copy the code into Remix and then deploy it to the JVM there.
+
+This gives you test accounts with test eth to do a "local" santity testing.
+
+> More info coming soon...
 
 ## Structure
 
@@ -30,18 +34,21 @@ At this stage the project will have a very flat structure. As the new components
 
 ### Contract Variables
 
-- Status
-- revealed
-- wlPrice;
-- salePrice
-- whitelistMintLimit
-- maxMintLimit
-- maxTokens
-- baseUri
-- notRevealedUri
-- whitelist;
-- addressMintedCount;
-- tokenIdCounter
+| Name               	| Type    	| Availability 	|
+|--------------------	|---------	|--------------	|
+| Status             	| enum    	| na           	|
+| status             	| Status   	| public       	|
+| revealed           	| bool    	| public       	|
+| whitelistPrice     	| uint256 	| public       	|
+| salePrice          	| uint256 	| public       	|
+| whitelistMintLimit 	| uint8   	| public       	|
+| maxMintLimit       	| uint8   	| public       	|
+| maxTokens          	| uint16  	| public       	|
+| baseUri            	| string  	| public       	|
+| notRevealedUri     	| string  	| public       	|
+| whitelist          	| mapping 	| public       	|
+| addressMintedCount 	| mapping 	| public       	|
+| tokenIdCounter     	| counter 	| private      	|
 
 ### Contract Functions
 
@@ -81,6 +88,7 @@ Tools used in the world of NFTs. This list includes tools used for development a
 - [Metamask](https://metamask.io/download/)
 
 ### NFT Community Tools
+- [Twitter](https://twitter.com/)
 - [Discord](https://discord.com/)
 - [Telegram](https://telegram.org/)
 
@@ -110,11 +118,30 @@ More coming soon...
 
 Any major decisions made will be documented here, in order to explain the reasoning.
 
-
 <br><br>
 
-
 # Other Information
+
+## Resources & Info
+
+There are many great resources to help with Smart Contract developement and deploying. We will add documents as and when required.
+
+### Docs
+
+- [Solidity](https://docs.soliditylang.org/en/latest)
+- [Remix IDE](https://remix-ide.readthedocs.io/en/latest/)
+
+### Videos
+
+> More info coming soon...
+
+### Terminology
+
+Terms used in the readme and changelog.
+
+- **Contract** (or Smart Contract): The smart contract. The two terms will be used interchangably, unless specified.
+
+<br>
 
 ## Creators
 
@@ -126,12 +153,6 @@ Connect with the creators on twitter:
 
 - TJ: [@tanujdamani](https://twitter.com/tanujdamani)
 - TMTLabs: [@tmtlabs](https://twitter.com/tmtlabs)
-
-## Terminology
-
-Terms used in the readme and changelog.
-
-- **Contract** (or Smart Contract): The smart contract. The two terms will be used interchangably, unless specified.
 
 ## License
 
