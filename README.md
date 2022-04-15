@@ -29,6 +29,15 @@ This gives you test accounts with test eth to do a "local" santity testing.
 
 At this stage the project will have a very flat structure. As the new components and features get added this structure will get more detailed/nested.
 
+Here is the current structure
+
+```
+root            //Project base
+└───contracts   //Smart Contract
+└───dapp        //Website Front End
+    │   img
+```
+
 ## Technical
 
 
