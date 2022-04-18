@@ -12,12 +12,11 @@ The [ChangeLog](CHANGELOG.md) will track all the updates and major changed made 
 
 <br><br>
 
-
-# Functionality
+## Functionality
 
 > More info coming soon...
 
-## How to use
+### How to use
 
 For now the easiest way to use this smart contract is to copy the code into Remix and then deploy it to the JVM there.
 
@@ -25,41 +24,40 @@ This gives you test accounts with test eth to do a "local" santity testing.
 
 > More info coming soon...
 
-## Structure
+### Structure
 
 At this stage the project will have a very flat structure. As the new components and features get added this structure will get more detailed/nested.
 
 Here is the current structure
 
-```
-root            //Project base
-└───contracts   //Smart Contract
-└───dapp        //Website Front End
+```text
+root            // Project base
+└───contracts   // Smart Contract
+└───dapp        // Website Front End
     │   img
 ```
 
-## Technical
+### Technical
 
+#### Contract Variables
 
-### Contract Variables
+| Name                | Type     | Availability  |
+|-------------------- |--------- |-------------- |
+| Status              | enum     | na            |
+| status              | Status   | public        |
+| revealed            | bool     | public        |
+| whitelistPrice      | uint256  | public        |
+| salePrice           | uint256  | public        |
+| whitelistMintLimit  | uint8    | public        |
+| maxMintLimit        | uint8    | public        |
+| maxTokens           | uint16   | public        |
+| baseUri             | string   | public        |
+| notRevealedUri      | string   | public        |
+| whitelist           | mapping  | public        |
+| addressMintedCount  | mapping  | public        |
+| tokenIdCounter      | counter  | private       |
 
-| Name               	| Type    	| Availability 	|
-|--------------------	|---------	|--------------	|
-| Status             	| enum    	| na           	|
-| status             	| Status   	| public       	|
-| revealed           	| bool    	| public       	|
-| whitelistPrice     	| uint256 	| public       	|
-| salePrice          	| uint256 	| public       	|
-| whitelistMintLimit 	| uint8   	| public       	|
-| maxMintLimit       	| uint8   	| public       	|
-| maxTokens          	| uint16  	| public       	|
-| baseUri            	| string  	| public       	|
-| notRevealedUri     	| string  	| public       	|
-| whitelist          	| mapping 	| public       	|
-| addressMintedCount 	| mapping 	| public       	|
-| tokenIdCounter     	| counter 	| private      	|
-
-### Contract Functions
+#### Contract Functions
 
 The smart contract functions.
 
@@ -79,31 +77,34 @@ The smart contract functions.
 - mint
 - withdraw
 
-
-## Tools
+### Tools
 
 Tools used in the world of NFTs. This list includes tools used for development and testing, along with general tools needed to own, or interact with NFTs and the communities.
 
-### IDE and Extentions
+#### IDE and Extentions
+
 - [Remix](https://remix.ethereum.org/) Web IDE
 - [VS Code](https://code.visualstudio.com/)
   - [Solidity](https://marketplace.visualstudio.com/items?itemName=JuanBlanco.solidity)
 
-### Browsers
+#### Browsers
+
 - [Chrome](https://www.google.com/chrome/)
 - [Opera](https://www.opera.com/)
 
-### Wallets
+#### Wallets
+
 - [Metamask](https://metamask.io/download/)
 
-### NFT Community Tools
+#### NFT Community Tools
+
 - [Twitter](https://twitter.com/)
 - [Discord](https://discord.com/)
 - [Telegram](https://telegram.org/)
 
 <br><br>
 
-# RoadMap
+## RoadMap
 
 The object of the SimpleNFT project is to be the basis for running your own NFT. This should be all encompassing. Which means it should include: the Contract, the DApp, Deploying and Testing.
 
@@ -111,7 +112,7 @@ This roadmap will keep growing and evolving as the NFTs and the industry as a wh
 
 Why? Let's take for example the need for Gas considerations, depending on the implementation of ETH 2.0, gas considerations might not be such a major factor. Going from pontentially saying $s to savings ¢s. So maybe we end up simplifying the contract to be more readable rather than gas efficient. Time will tell.
 
-## 1.0
+### 1.0
 
 1. Build the ERC721 Smart Contract
 1. Integrate HardHat
@@ -123,28 +124,28 @@ Why? Let's take for example the need for Gas considerations, depending on the im
 
 More coming soon...
 
-## Decisions
+### Decisions
 
 Any major decisions made will be documented here, in order to explain the reasoning.
 
 <br><br>
 
-# Other Information
+## Other Information
 
-## Resources & Info
+### Resources & Info
 
 There are many great resources to help with Smart Contract developement and deploying. We will add documents as and when required.
 
-### Docs
+#### Docs
 
 - [Solidity](https://docs.soliditylang.org/en/latest)
 - [Remix IDE](https://remix-ide.readthedocs.io/en/latest/)
 
-### Videos
+#### Videos
 
 > More info coming soon...
 
-### Terminology
+#### Terminology
 
 Terms used in the readme and changelog.
 
@@ -152,18 +153,18 @@ Terms used in the readme and changelog.
 
 <br>
 
-## Creators
+### Creators
 
 This project is created by TJ and TMTLabs.
 
-### Connect
+#### Connect
 
 Connect with the creators on twitter:
 
 - TJ: [@tanujdamani](https://twitter.com/tanujdamani)
 - TMTLabs: [@tmtlabs](https://twitter.com/tmtlabs)
 
-## License
+### License
 
 This code is provided under MIT license.
 
