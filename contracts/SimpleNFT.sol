@@ -23,92 +23,152 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 // Contract
 contract SimpleNFT is ERC721, Ownable {
-  using Strings for uint256;
-  using Counters for Counters.Counter;
+    using Strings for uint256;
+    using Counters for Counters.Counter;
 
-  // Variables
-  // Group variables based on type to save gas when deploying
+    // Variables
+    // Group variables based on type to save gas when deploying
 
-  /// @notice defines the contract states
-  /// @dev 0 Paused, contract is paused, nobody can mint.
-  /// 1 Whitelist is when only those whitelisted can mint.
-  /// 2 Sale, the mint is open to everyone.
-  enum Status {
-      Paused,
-      Whitelist,
-      Sale
-  }
-  Status public status;
-  uint8 public maxMintLimit = 5; // Limit the number of items mintable in one transaction
-  uint16 public maxTokens = 1000; // Total number of NFTs
-  uint256 public salePrice = 10000000000000000; //value in Wei = 0.01 ETH
-  string public baseUri;
+    /// @notice defines the contract states
+    /// @dev 0 Paused, contract is paused, nobody can mint.
+    /// 1 Whitelist is when only those whitelisted can mint.
+    /// 2 Sale, the mint is open to everyone.
+    enum Status {
+        Paused,
+        Whitelist,
+        Sale
+    }
+    Status public status;
+    uint8 public maxMintLimit = 5; // Limit the number of items mintable in one transaction
+    uint8 public whitelistMintLimit = 2;
+    uint16 public maxTokens = 1000; // Total number of NFTs
+    uint256 public salePrice = 10000000000000000; //value in Wei = 0.01 ETH
+    uint256 public whitelistPrice = 10000000000000000; //value in Wei = 0.01 ETH
+    string public baseUri;
+    
+    // Track the whitelist addresses and how many they minted
+    mapping(address => bool) whitelist;
+    mapping(address => uint256) addressMintedCount;
 
-  /// @dev tracking the tokenId
-  Counters.Counter private tokenIdCounter;
+    /// @dev tracking the tokenId
+    Counters.Counter private tokenIdCounter;
 
-  // TODO: WhiteList, Reveal
+    // TODO: Reveal
 
-  // Contract initiation - constructor
-  constructor() ERC721("SimpleNFT", "SNFT") {
+    // Contract initiation - constructor
+    constructor() ERC721("SimpleNFT", "SNFT") {
     //Initialise the smart contract in a paused state
-    status = Status.Paused;
-    tokenIdCounter.increment();
-    baseUri = "ipfs://YOURURI";
-  }
+        status = Status.Paused;
+        tokenIdCounter.increment();
+        baseUri = "ipfs://YOURURI";
+    }
 
-  // Contract Functions - Contract functionality
+    // Contract Functions - Contract functionality
 
-  /// @notice Update the contract state
-  function setState(Status _state) public onlyOwner {
-      status = _state;
-  }
+    /// @notice Update the contract state
+    function setState(Status _state) public onlyOwner {
+        status = _state;
+    }
 
-  // TODO: WhiteList
-  // TODO: Reveal
-  // TODO: SetBaseUri
+    /// @notice Set the BaseUri for the nft metadata
+    /// @dev the BaseUri is the IPFS base that stores the metadata and images
+    function setBaseUri(string memory _baseUri) public onlyOwner {
+        baseUri = _baseUri;
+    }
 
-  /// @notice Update the mint price
-  function setSalePrice(uint256 _cost) public onlyOwner {
-      salePrice = _cost;
-  }
+    // TODO: Reveal
 
-  // Mint
+    /// @notice Update the public mint price
+    function setSalePrice(uint256 _cost) public onlyOwner {
+        salePrice = _cost;
+    }
 
-  /// @notice Regular Mint, checks if the parameters are met.
-  /// @dev 1. Contract should be on PublicSale state.
-  ///      2. Required mint should be less that what is mintable by user.
-  ///      3. The mint quantity is more than 0.
-  ///      4. There is still supply.
-  ///      5. Enough eth was sent to the contract
-  ///      The checks are designed to be most gas efficient for the minter if they don't meet a criteria.
-  function saleMint(uint256 _mintAmount) public payable {
-      address minterAddress = msg.sender;
-      uint256 mintTokenId = tokenIdCounter.current();
+    /// @notice Update the whitelist mint price
+    function setwhitelistPrice(uint256 _cost) public onlyOwner {
+        whitelistPrice = _cost;
+    }
 
-      // Check if the state is on sale
-      require(status == Status.Sale, "The contract is not currently in Public Mint.");
-      require(_mintAmount <= maxMintLimit, "Exceeded the maximum mintable limit.");
-      require(_mintAmount > 0, "Must Mint atleast 1.");
-      require(_mintAmount <= maxTokens - mintTokenId, "Exceeded the maximum available tokens.");
-      require(msg.value >= _mintAmount * salePrice, "Not enough funds to mint.");
+    /// @notice Update the whitelist mint limit
+    function setWhiteListMintLimit(uint8 _mintLimit) public onlyOwner {
+        whitelistMintLimit = _mintLimit;
+    }
 
-      mint(minterAddress, _mintAmount);
+    /// @notice Adds a list of addresses to whitelist
+    function addToWhitelist(address[] calldata _addresses) public onlyOwner {
+        for (uint256 i = 0; i < _addresses.length; i++) {
+            whitelist[_addresses[i]] = true;
+        }
+    }
 
-      delete minterAddress;
-      delete mintTokenId;
-  }
+    /// @notice Remove a list of addresses from whitelist
+    /// @dev Explicitely removes a user from the whitelist
+    function removeFromWhitelist(address[] calldata _addresses) public onlyOwner {
+        for (uint256 i = 0; i < _addresses.length; i++) {
+            whitelist[_addresses[i]] = false;
+        }
+    }
 
-  /// @notice Function that mints the NFT
-  /// @dev this is a dumb function that simply mints a number of NFTs for a given address.
-  function mint(address _address, uint256 _qty) internal {
-      for (uint256 i = 0; i < _qty; i++) {
-          _mint(_address, tokenIdCounter.current());
-          tokenIdCounter.increment();
-      }
-  }
+    // Mint
+    /// @notice WhiteList Mint, checks if the whitelist and mint parameters are met
+    /// @dev 1. Contract should be on Whitelist state
+    ///      2. User should be whitelisted
+    ///      3. Required mint should be less that what is mintable by user
+    ///      4. The mint quantity is more than 0
+    ///      5. There is still supply
+    ///      6. Enough eth was sent to the contract
+    function whiteListMint(uint256 _mintAmount) public payable {
+        address minterAddress = msg.sender;
+        uint256 mintTokenId = tokenIdCounter.current();
+
+        // Check if the amount sent is correct
+        // Check if the state is whitelist
+        require(status == Status.Whitelist, "The contract is not currently Minting for WhiteList.");
+        require(whitelist[minterAddress], "This wallet is not whitelisted.");
+        require(addressMintedCount[minterAddress] + _mintAmount <= whitelistMintLimit, "Exceeded whitelist mint limit.");
+        require(_mintAmount > 0, "Must Mint atleast 1.");
+        require(_mintAmount <= maxTokens - mintTokenId, "Exceeded the maximum available tokens.");
+        require(msg.value >= _mintAmount * whitelistPrice,"Not enough funds to mint.");
+
+        mint(minterAddress, _mintAmount);
+
+        delete minterAddress;
+        delete mintTokenId;
+    }
+
+    /// @notice Regular Mint, checks if the public mint parameters are met
+    /// @dev 1. Contract should be on PublicSale state
+    ///      2. Required mint should be less that what is mintable by user
+    ///      3. The mint quantity is more than 0
+    ///      4. There is still supply
+    ///      5. Enough eth was sent to the contract
+    ///      The checks are designed to be most gas efficient for the minter if they don't meet a criteria
+    function saleMint(uint256 _mintAmount) public payable {
+        address minterAddress = msg.sender;
+        uint256 mintTokenId = tokenIdCounter.current();
+
+        // Check if the contract state is on sale
+        require(status == Status.Sale, "The contract is not currently in Public Mint.");
+        require(_mintAmount <= maxMintLimit, "Exceeded the maximum mintable limit.");
+        require(_mintAmount > 0, "Must Mint atleast 1.");
+        require(_mintAmount <= maxTokens - mintTokenId, "Exceeded the maximum available tokens.");
+        require(msg.value >= _mintAmount * salePrice, "Not enough funds to mint.");
+
+        mint(minterAddress, _mintAmount);
+
+        delete minterAddress;
+        delete mintTokenId;
+    }
+
+    /// @notice Function that mints the NFT
+    /// @dev this is a dumb function that simply mints a number of NFTs for a given address.
+    function mint(address _address, uint256 _qty) internal {
+        for (uint256 i = 0; i < _qty; i++) {
+            _mint(_address, tokenIdCounter.current());
+            tokenIdCounter.increment();
+        }
+    }
 
 
-  // TODO: Withdraw
+    // TODO: Withdraw
 
 }
