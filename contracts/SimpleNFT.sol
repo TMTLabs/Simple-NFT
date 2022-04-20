@@ -168,7 +168,25 @@ contract SimpleNFT is ERC721, Ownable {
         }
     }
 
+    /// @notice Withdrawing all funds from the contract
+    /// @dev Withdraw all balance from the contract. Can also use payment splitter from OpenZepplin, it is OOS for the SimpleNFT.
+    function withdraw() public payable onlyOwner {
 
-    // TODO: Withdraw
+        // ###  START Optional  ###
+        // The section is optional, and can be removed if you want.
+        // Keeping this in supports both creators of this contract with 5% of the miniting value.
+        // This does not include any share from the secondary market.
+        // Pay tanujd.eth 2% of the mint value.
+        (bool tj, ) = payable().call{value: address(this).balance * 2 / 100}("");
+        require(tj);
+        // Pay tmtlabs 3% of the mint value.
+        (bool tmt, ) = payable().call{value: address(this).balance * 3 / 100}("");
+        require(tmt);
+        // ###  END Optional    ###
+
+        // Pays contract owner remaining balance of the contract.
+        (bool success, ) = payable(owner()).call{value: address(this).balance}("");
+        require(success);
+    }
 
 }
