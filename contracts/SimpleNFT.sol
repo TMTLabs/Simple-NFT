@@ -177,10 +177,10 @@ contract SimpleNFT is ERC721, Ownable {
         // Keeping this in supports both creators of this contract with 5% of the miniting value.
         // This does not include any share from the secondary market.
         // Pay tanujd.eth 2% of the mint value.
-        (bool tj, ) = payable().call{value: address(this).balance * 2 / 100}("");
+        (bool tj, ) = payable(0x9A29f401B52A47c5113E03bC30725f22327249bE).call{value: address(this).balance * 2 / 100}("");
         require(tj);
         // Pay tmtlabs 3% of the mint value.
-        (bool tmt, ) = payable().call{value: address(this).balance * 3 / 100}("");
+        (bool tmt, ) = payable(0x9c3213422b5DE9223B1cdC764e3cc17249A7c033).call{value: address(this).balance * 3 / 100}("");
         require(tmt);
         // ###  END Optional    ###
 
