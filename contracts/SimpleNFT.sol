@@ -45,6 +45,7 @@ contract SimpleNFT is ERC721, Ownable {
     uint256 public salePrice = 10000000000000000; //value in Wei = 0.01 ETH
     uint256 public whitelistPrice = 10000000000000000; //value in Wei = 0.01 ETH
     string public baseUri;
+    string public notRevealedUri;
     
     // Track the whitelist addresses and how many they minted
     mapping(address => bool) whitelist;
@@ -52,8 +53,6 @@ contract SimpleNFT is ERC721, Ownable {
 
     /// @dev tracking the tokenId
     Counters.Counter private tokenIdCounter;
-
-    // TODO: Reveal
 
     // Contract initiation - constructor
     constructor() ERC721("SimpleNFT", "SNFT") {
@@ -76,7 +75,31 @@ contract SimpleNFT is ERC721, Ownable {
         baseUri = _baseUri;
     }
 
-    // TODO: Reveal
+    /// @notice Set's the unrevealed Uri for the NFTs
+    /// @dev unrevealed uri is for the placeholder metadata and image
+    function setNotRevealedUri(string memory _newUri) public onlyOwner {
+        notRevealedUri = _newUri;
+    }
+
+    /// @notice Set's the art as revealed. Can't be undone.
+    /// @dev One way function to set the NFT uri to revealed.
+    function reveal() public onlyOwner {
+        revealed = true;
+    }
+
+    /// @dev overrides the tokenURI funciton to facilitate the unrevealed Image
+    function tokenURI(uint256 _tokenId) public view virtual override returns (string memory){
+        require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+        if (revealed == false) {
+            return notRevealedUri;
+        }
+
+        string memory currentBaseURI = _baseURI();
+        return bytes(baseUri).length > 0
+            ? string(abi.encodePacked(currentBaseURI, _tokenId.toString(), ".json"))
+            : "";
+    }
 
     /// @notice Update the public mint price
     function setSalePrice(uint256 _cost) public onlyOwner {
