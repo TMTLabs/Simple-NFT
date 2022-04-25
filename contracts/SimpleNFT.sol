@@ -29,6 +29,8 @@ contract SimpleNFT is ERC721, Ownable {
     // Variables
     // Group variables based on type to save gas when deploying
 
+    bool public revealed = false;
+
     /// @notice defines the contract states
     /// @dev 0 Paused, contract is paused, nobody can mint.
     /// 1 Whitelist is when only those whitelisted can mint.
