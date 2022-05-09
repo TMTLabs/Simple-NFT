@@ -41,9 +41,9 @@ contract SimpleNFT is ERC721, Ownable {
         Sale
     }
     Status public status;
-    uint8 public maxMintLimit = 5; // Limit the number of items mintable in one transaction
-    uint8 public whitelistMintLimit = 2;
-    uint16 public maxTokens = 1000; // Total number of NFTs
+    uint256 public maxMintLimit = 5; // Limit the number of items mintable in one transaction
+    uint256 public whitelistMintLimit = 2;
+    uint256 public maxTokens = 1000; // Total number of NFTs
     uint256 public salePrice = 10000000000000000; //value in Wei = 0.01 ETH
     uint256 public whitelistPrice = 10000000000000000; //value in Wei = 0.01 ETH
     string public baseUri;
@@ -114,7 +114,7 @@ contract SimpleNFT is ERC721, Ownable {
     }
 
     /// @notice Update the whitelist mint limit
-    function setWhiteListMintLimit(uint8 _mintLimit) public onlyOwner {
+    function setWhiteListMintLimit(uint256 _mintLimit) public onlyOwner {
         whitelistMintLimit = _mintLimit;
     }
 
@@ -145,8 +145,6 @@ contract SimpleNFT is ERC721, Ownable {
         address minterAddress = msg.sender;
         uint256 mintTokenId = tokenIdCounter.current();
 
-        // Check if the amount sent is correct
-        // Check if the state is whitelist
         require(status == Status.Whitelist, "The contract is not currently Minting for WhiteList.");
         require(whitelist[minterAddress], "This wallet is not whitelisted.");
         require(addressMintedCount[minterAddress] + _mintAmount <= whitelistMintLimit, "Exceeded whitelist mint limit.");
@@ -155,9 +153,6 @@ contract SimpleNFT is ERC721, Ownable {
         require(msg.value >= _mintAmount * whitelistPrice,"Not enough funds to mint.");
 
         mint(minterAddress, _mintAmount);
-
-        delete minterAddress;
-        delete mintTokenId;
     }
 
     /// @notice Regular Mint, checks if the public mint parameters are met
@@ -168,20 +163,15 @@ contract SimpleNFT is ERC721, Ownable {
     ///      5. Enough eth was sent to the contract
     ///      The checks are designed to be most gas efficient for the minter if they don't meet a criteria
     function saleMint(uint256 _mintAmount) public payable {
-        address minterAddress = msg.sender;
         uint256 mintTokenId = tokenIdCounter.current();
 
-        // Check if the contract state is on sale
         require(status == Status.Sale, "The contract is not currently in Public Mint.");
         require(_mintAmount <= maxMintLimit, "Exceeded the maximum mintable limit.");
         require(_mintAmount > 0, "Must Mint atleast 1.");
         require(_mintAmount <= maxTokens - mintTokenId, "Exceeded the maximum available tokens.");
         require(msg.value >= _mintAmount * salePrice, "Not enough funds to mint.");
 
-        mint(minterAddress, _mintAmount);
-
-        delete minterAddress;
-        delete mintTokenId;
+        mint(msg.sender, _mintAmount);
     }
 
     /// @notice Function that mints the NFT
